@@ -16,6 +16,7 @@ import java.util.List;
  * 2.查询方法以find|get|read 开头
  * 3.涉及条件查询时，条件的属性用条件关键字连接
  * 4.要注意的是:条件属性以首字母大写
+ * 5.支持属性的级联查询，若当前类有复合条件的属性 则优先使用，而不使用级联属性
  */
 public interface UserDao extends JpaRepository<User,Long> {
 
@@ -58,5 +59,8 @@ public interface UserDao extends JpaRepository<User,Long> {
     //WHERE createTime between ?1 and ?2
     List<User> getByCreateTimeBetween(Date before,Date after);
 
+    //WHERE a.id > ?
+    //注意 这是一个级联查询
+    List<User> getByAddressIdGreaterThan(Long id);
 
 }

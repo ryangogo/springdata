@@ -1,9 +1,6 @@
 package com.ryan.springdata.Entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -75,6 +72,10 @@ public class User {
     @Column(nullable = true)
     private Integer agencyId;
 
+    @JoinColumn(name="ADDRESS_ID")
+    @ManyToOne
+    private Address address;
+
     /**
      * 获取主键
      *
@@ -83,6 +84,7 @@ public class User {
     public Long getId() {
         return id;
     }
+
 
     /**
      * 设置主键
@@ -273,6 +275,14 @@ public class User {
         this.agencyId = agencyId;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -287,6 +297,7 @@ public class User {
                 ", createTime=" + createTime +
                 ", enable=" + enable +
                 ", agencyId=" + agencyId +
+                ", address=" + address +
                 '}';
     }
 }

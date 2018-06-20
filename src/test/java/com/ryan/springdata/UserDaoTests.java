@@ -44,14 +44,6 @@ public class UserDaoTests {
         System.out.println(user);
     }
 
-    /*@Test
-    public void testGetByNameStartingWidthAndIdLessThan(){
-        List<User> listUsers = userDao.getByNameStartingWidthAndIdLessThan("ad",(long)8);
-        for(User user : listUsers){
-            System.out.println(user);
-        }
-    }*/
-
     @Test
     public void tesGetByIdLessThan(){
         List<User> listUsers = userDao.getByIdLessThan((long)8);
@@ -92,5 +84,15 @@ public class UserDaoTests {
             System.out.println(user);
         }
     }
+
+    @Test
+    public void testGetByAddressIdGreaterThan(){
+        List<User> listUsers = userDao.getByAddressIdGreaterThan((long)1);
+        for(User user : listUsers){
+            System.out.println(user.getAddress());
+        }
+    }
+
+
 
 }

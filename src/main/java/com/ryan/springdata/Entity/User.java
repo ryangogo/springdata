@@ -18,7 +18,7 @@ public class User {
     /**
      * 姓名
      */
-    @Column(nullable = true)
+    @Column(name = "name",nullable = true)
     private String name;
 
     /**
@@ -48,6 +48,7 @@ public class User {
     /**
      * 头像图片
      */
+    @Column(nullable = true)
     private String avatar;
 
     /**

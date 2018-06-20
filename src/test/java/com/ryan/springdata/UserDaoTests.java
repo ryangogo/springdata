@@ -93,6 +93,47 @@ public class UserDaoTests {
         }
     }
 
+    //-------------------------------------以下为使用@Query注解的查询------------------------------------------------------
+
+    @Test
+    public void testGetMaxIdUser(){
+        User maxIdUser = userDao.getMaxIdUser();
+        System.out.println(maxIdUser);
+    }
+
+    @Test
+    public void testSelectUserByNameAndEmail(){
+        User maxIdUser = userDao.selectUserByNameAndEmail("admin1","ryan@161.com");
+        System.out.println(maxIdUser);
+    }
+
+    @Test
+    public void testSelectUserByNameAndEmail2(){
+        User maxIdUser = userDao.selectUserByNameAndEmail2("admin1","ryan@161.com");
+        System.out.println(maxIdUser);
+    }
+
+    @Test
+    public void testSelectUsersByNameLikeAndEmailLike(){
+        List<User> listUsers = userDao.selectUsersByNameLikeAndEmailLike("%min%","%16%");
+        for(User user : listUsers){
+            System.out.println(user);
+        }
+    }
+
+    @Test
+    public void testSelectUsersByNameLikeAndEmailLike2(){
+        List<User> listUsers = userDao.selectUsersByNameLikeAndEmailLike2("min","16");
+        for(User user : listUsers){
+            System.out.println(user);
+        }
+    }
+
+    @Test
+    public void testSelectTotalCount(){
+        long result = userDao.selectUserTotal();
+        System.out.println("--------------" + result + "--------------");
+    }
 
 
 }

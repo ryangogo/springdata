@@ -1,4 +1,4 @@
-package com.ryan.springdata.Entity;
+package com.ryan.springdata.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

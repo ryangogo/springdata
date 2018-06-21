@@ -1,18 +1,24 @@
 package com.ryan.springdata;
 
 import com.ryan.springdata.dao.UserDao;
+import com.ryan.springdata.dao.UserDao3;
 import com.ryan.springdata.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -25,6 +31,10 @@ public class UserDaoTests {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserDao3 userDao3;
+
 
     @Test
 	public void testGetById(){
@@ -93,6 +103,58 @@ public class UserDaoTests {
         }
     }
 
+    /**
+     * PagingAndSortingRepository接口的分页方法
+     */
+    @Test
+    public void testPage() {
+        //pageNo从0开始，第一页的pageNo为0
+        int pageNo = 0;
+        int pageSize = 5;
+        Pageable pageable = new PageRequest(pageNo, pageSize);
+        Page<User> all = userDao3.findAll(pageable);
+        System.out.println("总记录数：" + all.getTotalElements());
+        System.out.println("当前页码：" + all.getNumber());
+        System.out.println("总页数：" + all.getTotalPages());
+        System.out.println("当前页面的List：" + all.getContent());
+        System.out.println("当前页面的记录数：" + all.getNumberOfElements());
+    }
+
+    /**
+     * PagingAndSortingRepository接口的排序方法
+     */
+    @Test
+    public void testSort() {
+        //Sort.Order为排序条件，构造方法为public Sort(Sort.Order... orders) 也就是说在其中可以传入多个sort来进行排序
+        //按照createTime来进行降序排序
+        Sort.Order order1 = new Sort.Order(Sort.Direction.DESC, "createTime");
+        Sort sort = new Sort(order1);
+        Iterable<User> all = userDao3.findAll(sort);
+        Iterator<User> iterator = all.iterator();
+        while (iterator.hasNext()) {
+            User user = iterator.next();
+            System.out.println(user);
+        }
+    }
+
+    /**
+     * PagingAndSortingRepository接口的分页+排序方法
+     */
+    @Test
+    public void testPageAndSort() {
+        //pageNo从0开始，第一页的pageNo为0
+        int pageNo = 0;
+        int pageSize = 5;
+        Sort.Order order1 = new Sort.Order(Sort.Direction.DESC, "createTime");
+        Sort sort = new Sort(order1);
+        Pageable pageable = new PageRequest(pageNo, pageSize, sort);
+        Page<User> all = userDao3.findAll(pageable);
+        System.out.println("总记录数：" + all.getTotalElements());
+        System.out.println("当前页码：" + all.getNumber());
+        System.out.println("总页数：" + all.getTotalPages());
+        System.out.println("当前页面的List：" + all.getContent());
+        System.out.println("当前页面的记录数：" + all.getNumberOfElements());
+    }
     //-------------------------------------以下为使用@Query注解的查询------------------------------------------------------
 
     @Test

@@ -1,8 +1,9 @@
-package com.ryan.springdata.Dao;
+package com.ryan.springdata.dao;
 
-import com.ryan.springdata.Entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.ryan.springdata.entity.User;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
@@ -20,7 +21,7 @@ import java.util.List;
  * 4.要注意的是:条件属性以首字母大写
  * 5.支持属性的级联查询，若当前类有复合条件的属性 则优先使用，而不使用级联属性
  */
-public interface UserDao extends JpaRepository<User,Long> {
+public interface UserDao extends Repository<User, Long> {
 
     /**
      * 根据id来获取对应的user
@@ -91,5 +92,11 @@ public interface UserDao extends JpaRepository<User,Long> {
     @Query(value="select count(id) from user",nativeQuery = true)
     long selectUserTotal();
 
-
+    //通过JPQL进行UODATE 和 DELETE操作 需要注意：
+    //1.JPQL不支持insert操作
+    //2.在执行修改操作的时候需要加上@Modifying注解
+    //3.需要加上事务，否则无法通过（因此我新增了service以及其单元测试，并且加上了事务的支持）
+    @Modifying
+    @Query("UPDATE User u set u.email = :email where u.id = :id")
+    void updateEmailById(@Param("email") String email, @Param("id") long id);
 }

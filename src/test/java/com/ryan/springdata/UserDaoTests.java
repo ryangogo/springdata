@@ -2,6 +2,8 @@ package com.ryan.springdata;
 
 import com.ryan.springdata.dao.UserDao;
 import com.ryan.springdata.dao.UserDao3;
+import com.ryan.springdata.dao.UserDao4;
+import com.ryan.springdata.entity.Address;
 import com.ryan.springdata.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +36,9 @@ public class UserDaoTests {
 
     @Autowired
     private UserDao3 userDao3;
+
+    @Autowired
+    private UserDao4 userDao4;
 
 
     @Test
@@ -155,6 +160,31 @@ public class UserDaoTests {
         System.out.println("当前页面的List：" + all.getContent());
         System.out.println("当前页面的记录数：" + all.getNumberOfElements());
     }
+
+    /**
+     * 添加一条新的数据并且返回数据信息
+     */
+    @Test
+    public void testSaveAndFlush() {
+        Address address = new Address();
+        address.setId((long) 1);
+        User user = new User();
+        user.setName("测试返回");
+        user.setPhone("1811112222");
+        user.setEmail("XXYY@163.com");
+        user.setPasswd("123456");
+        user.setAvatar("1");
+        user.setAboutme("eee");
+        user.setType((byte) 1);
+        user.setCreateTime(new Date());
+        user.setEnable((byte) 1);
+        user.setAgencyId(111);
+        user.setAddress(address);
+        user = userDao4.saveAndFlush(user);
+        System.out.println(user.getId());
+
+    }
+
     //-------------------------------------以下为使用@Query注解的查询------------------------------------------------------
 
     @Test

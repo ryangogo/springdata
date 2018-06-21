@@ -92,11 +92,14 @@ public interface UserDao extends Repository<User, Long> {
     @Query(value="select count(id) from user",nativeQuery = true)
     long selectUserTotal();
 
+    @Query(value = "select name from User where id = :id", nativeQuery = true)
+    String selectNameById(@Param("id") long id);
+
     //通过JPQL进行UODATE 和 DELETE操作 需要注意：
     //1.JPQL不支持insert操作
     //2.在执行修改操作的时候需要加上@Modifying注解
     //3.需要加上事务，否则无法通过（因此我新增了service以及其单元测试，并且加上了事务的支持）
     @Modifying
     @Query("UPDATE User u set u.email = :email where u.id = :id")
-    void updateEmailById(@Param("email") String email, @Param("id") long id);
+    int updateEmailById(@Param("email") String email, @Param("id") long id);
 }

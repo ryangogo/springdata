@@ -225,6 +225,12 @@ public class UserDaoTests {
         System.out.println("当前页面的记录数：" + all.getNumberOfElements());
 
     }
+
+
+    @Test
+    public void testMyRepository() {
+        userDao5.test();
+    }
     //-------------------------------------以下为使用@Query注解的查询------------------------------------------------------
 
     @Test

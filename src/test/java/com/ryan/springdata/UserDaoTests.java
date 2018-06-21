@@ -3,6 +3,7 @@ package com.ryan.springdata;
 import com.ryan.springdata.dao.UserDao;
 import com.ryan.springdata.dao.UserDao3;
 import com.ryan.springdata.dao.UserDao4;
+import com.ryan.springdata.dao.UserDao5;
 import com.ryan.springdata.entity.Address;
 import com.ryan.springdata.entity.User;
 import org.junit.Test;
@@ -14,8 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.criteria.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +43,8 @@ public class UserDaoTests {
     @Autowired
     private UserDao4 userDao4;
 
+    @Autowired
+    private UserDao5 userDao5;
 
     @Test
 	public void testGetById(){
@@ -182,9 +187,44 @@ public class UserDaoTests {
         user.setAddress(address);
         user = userDao4.saveAndFlush(user);
         System.out.println(user.getId());
-
     }
 
+    /**
+     * 实现带有查询条件的分页查询，id>5的条件
+     * <p/>
+     * 调用JpaSpecificationExecutor 的 Page<T> findAll(Specification<T> spec,Pageable pageable)
+     * Specification:封装了JpaCriteria查询的查询条件
+     * Pageable:封装了请求分页的信息：例如pageNo，pageSize，sort
+     */
+    @Test
+    public void testPageByCondition() {
+        int pageNo = 4, pageSize = 5;
+        Pageable pageable = new PageRequest(pageNo, pageSize);
+        //通常使用Specification的匿名内部类
+        Specification<User> specification = new Specification<User>() {
+            /**
+             *
+             * @param *root 代表查询实体类
+             * @param criteriaQuery 我们可以从中得到root对象，即告知JPA Criteria 查询要查询哪一个实体类，还可以
+             *                      结合EntityManager对象得到最终查询的TypeQuery对象
+             * @param *criteriaBuilder 用于创建criteria相关对象的工厂，当然可以从中获取到Predicate 对象
+             * @return *Predicate类型，代表一个查询条件
+             */
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                Path path = root.get("id");
+                Predicate predicate = criteriaBuilder.gt(path, 9);
+                return predicate;
+            }
+        };
+        Page<User> all = userDao5.findAll(specification, pageable);
+        System.out.println("总记录数：" + all.getTotalElements());
+        System.out.println("当前页码：" + all.getNumber());
+        System.out.println("总页数：" + all.getTotalPages());
+        System.out.println("当前页面的List：" + all.getContent());
+        System.out.println("当前页面的记录数：" + all.getNumberOfElements());
+
+    }
     //-------------------------------------以下为使用@Query注解的查询------------------------------------------------------
 
     @Test
@@ -219,6 +259,12 @@ public class UserDaoTests {
         for(User user : listUsers){
             System.out.println(user);
         }
+    }
+
+    @Test
+    public void testSelectNameById() {
+        String userName = userDao.selectNameById((long) 1);
+        System.out.println(userName);
     }
 
     @Test

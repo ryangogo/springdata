@@ -23,7 +23,8 @@ public class UserServiceTests {
 
     @Test
     public void testModifyEmailById() {
-        userService.modifyEmailById("hehe@qq.com", (long) 5);
+        int result = userService.modifyEmailById("hehe@qq.com", (long) 5);
+        System.out.println("--------------" + result + "--------------");
     }
 
     @Test

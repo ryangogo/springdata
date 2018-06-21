@@ -5,7 +5,7 @@ package com.ryan.springdata.service;
  */
 public interface UserService {
 
-    void modifyEmailById(String email, long id);
+    int modifyEmailById(String email, long id);
 
     void addUsers();
 }

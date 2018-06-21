@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -28,8 +29,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void modifyEmailById(String email, long id) {
-        userDao.updateEmailById(email, id);
+    public int modifyEmailById(String email, long id) {
+        return userDao.updateEmailById(email, id);
     }
 
     @Transactional
@@ -54,6 +55,11 @@ public class UserServiceImpl implements UserService {
             user.setAddress(address);
             users.add(user);
         }
-        userDao2.save(users);
+        Iterable<User> save = userDao2.save(users);
+        Iterator<User> iterator = save.iterator();
+        while (iterator.hasNext()) {
+            User u = iterator.next();
+            System.out.println("---------" + u.getId() + "----------");
+        }
     }
 }
